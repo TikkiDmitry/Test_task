@@ -1,3 +1,5 @@
+# models.py
+
 from django.db import models
 from model_utils.models import TimeStampedModel
 from rest_framework import serializers
@@ -37,7 +39,7 @@ class Food(TimeStampedModel):
 
     cost = models.DecimalField(verbose_name='Цена', max_digits=10, decimal_places=2)
 
-    is_publish = models.BooleanField(verbose_name='Опубликовано', default=False)
+    is_publish = models.BooleanField(verbose_name='Опубликовано', default=True)
 
     additional = models.ManyToManyField('self', verbose_name='Дополнительные товары', symmetrical=False,
                                         related_name='additional_from', blank=True)

@@ -1,14 +1,12 @@
-from django.shortcuts import render
+from django.db.models import Prefetch
 from .models import FoodCategory, FoodListSerializer, Food
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from rest_framework import generics
 
 
-class FoodListView(APIView):
-    def get(self, request):
-        published_foods = Food.objects.filter(is_publish=True)
-        categories = FoodCategory.objects.filter(food__in=published_foods).distinct()
-        serializer = FoodListSerializer(categories, many=True)
-        return Response(serializer.data)
+class FoodListView(generics.ListAPIView):
+    queryset = FoodCategory.objects.prefetch_related(
+        Prefetch('food', queryset=Food.objects.filter(is_publish=True))
+    ).distinct().order_by('id')
+    serializer_class = FoodListSerializer
 
 
